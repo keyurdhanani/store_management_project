@@ -49,7 +49,7 @@ const ProductList = () => {
             <th>Name</th>
             <th>Category</th>
             <th>Price (INR)</th>
-            <th>Stock Qty</th>
+            <th>Stock Quantity</th>
             <th>Expiry Date</th>
             <th>Status</th>
             <th>Actions</th>
