@@ -16,5 +16,7 @@ export const fetchProducts = () => api.get('/products/');
 export const fetchCategories = () => api.get('/categories/');
 
 // You can add more functions here (e.g., createProduct, updateProduct)
+export const createProduct = (productData) => api.post('/products/', productData); // <-- Add this
+
 
 export default api;

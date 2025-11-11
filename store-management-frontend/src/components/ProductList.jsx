@@ -37,10 +37,7 @@ const ProductList = () => {
 
   return (
     <Container className="mt-4">
-      <h2>📦 Product Inventory List</h2>
-      <div className="mb-3 d-flex justify-content-end">
-        <Button variant="success">Add New Product</Button>
-      </div>
+     
 
       <Table striped bordered hover responsive>
         <thead>
