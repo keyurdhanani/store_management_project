@@ -2,14 +2,19 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, ProductViewSet
+from .views import CategoryViewSet, ProductViewSet, SupplierViewSet, PurchaseViewSet
+from .views import (CategoryViewSet, ProductViewSet, SupplierViewSet, 
+                   PurchaseViewSet, SaleInvoiceViewSet,
+                   DashboardStatsView, LowStockListView)
 
-# Create a router and register our ViewSets with it.
 router = DefaultRouter()
-router.register(r'categories', CategoryViewSet) # Endpoint: /api/categories/
-router.register(r'products', ProductViewSet)   # Endpoint: /api/products/
-
-# The API URLs are now determined automatically by the router.
+router.register(r'categories', CategoryViewSet)
+router.register(r'products', ProductViewSet)   
+router.register(r'suppliers', SupplierViewSet) 
+router.register(r'purchases', PurchaseViewSet)
+router.register(r'sales', SaleInvoiceViewSet)
 urlpatterns = [
     path('', include(router.urls)),
+    path('dashboard/stats/', DashboardStatsView.as_view(), name='dashboard-stats'),
+    path('dashboard/low-stock/', LowStockListView.as_view(), name='low-stock-list'),
 ]
