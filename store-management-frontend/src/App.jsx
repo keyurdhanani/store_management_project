@@ -7,6 +7,7 @@ import { Button, Container } from 'react-bootstrap';
 import PurchaseEntryPage from './components/PurchaseEntryPage';
 import BillingPOS from './components/BillingPOS';
 import './App.css'; 
+import HistoryPage from './components/HistoryPage';
 import Dashboard from './components/Dashboard';
 
 function App() {
@@ -26,6 +27,9 @@ function App() {
   }
 
   const renderPage = () => {
+    if (currentPage === 'history') { 
+        return <HistoryPage />;
+    }
     // --- 1. Inventory Management (Products/AddProduct) ---
     if (currentPage === 'products' || showAddForm) {
       
@@ -107,6 +111,7 @@ function App() {
       </Container>
     );
 
+    
     
 
   };

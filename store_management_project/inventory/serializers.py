@@ -1,10 +1,11 @@
-# api/serializers.py (FINAL CORRECTED VERSION)
+# api/serializers.py
 
 from rest_framework import serializers
 from .models import SaleInvoice, SaleItem, Supplier, Category, Product, Purchase, Stock
 from django.db import transaction
 from decimal import Decimal
-from django.db.models import F # Keep F expression for good practice, though not used here directly
+from django.db.models import F 
+from django.contrib.auth.models import User
 
 # --- Model Serializers ---
 
@@ -141,3 +142,17 @@ class SaleInvoiceSerializer(serializers.ModelSerializer):
                 item_total=item_total
             )
         return invoice
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True, 'required': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password']
+        )
+        return user

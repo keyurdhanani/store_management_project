@@ -6,6 +6,8 @@ from rest_framework import views
 from rest_framework.response import Response
 from django.db.models import Sum, F, DecimalField
 from django.utils import timezone
+from django.http import HttpResponse
+import csv
 from datetime import timedelta
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -80,3 +82,40 @@ class LowStockListView(views.APIView):
         # (Assuming ProductSerializer includes stock details as a nested field)
         serializer = ProductSerializer(low_stock_products, many=True)
         return Response(serializer.data)
+    
+class SaleHistoryListView(viewsets.ReadOnlyModelViewSet):
+    """View for listing all past sales."""
+    queryset = SaleInvoice.objects.all().prefetch_related('items').order_by('-sale_date')
+    serializer_class = SaleInvoiceSerializer
+    
+class PurchaseHistoryListView(viewsets.ReadOnlyModelViewSet):
+    """View for listing all past purchases."""
+    queryset = Purchase.objects.all().select_related('product', 'supplier').order_by('-purchase_date')
+    serializer_class = PurchaseSerializer
+    
+class SalesExportView(views.APIView):
+    """API to export all sales data to a CSV file."""
+
+    def get(self, request, format=None):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="sales_report.csv"'
+
+        writer = csv.writer(response)
+        # Define CSV Header Row
+        writer.writerow(['Invoice No', 'Date', 'Customer Name', 'Subtotal', 'Tax', 'Total'])
+
+        # Fetch data
+        sales = SaleInvoice.objects.all().order_by('-sale_date')
+
+        # Write data rows
+        for sale in sales:
+            writer.writerow([
+                sale.invoice_number,
+                sale.sale_date.strftime('%Y-%m-%d %H:%M'),
+                sale.customer_name or 'N/A',
+                sale.subtotal,
+                sale.tax_amount,
+                sale.final_total
+            ])
+
+        return response

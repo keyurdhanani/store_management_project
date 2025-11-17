@@ -4,7 +4,7 @@ import React from 'react';
 import { Navbar, Container, Nav, Button, Image } from 'react-bootstrap';
 import logo from '../assets/logo.png'; // <-- adjust path if needed
 // Import icons
-import { FaTachometerAlt, FaBoxes, FaShoppingCart, FaChartBar, FaSignOutAlt, FaReceipt } from 'react-icons/fa';
+import { FaTachometerAlt, FaBoxes, FaShoppingCart, FaChartBar, FaSignOutAlt, FaReceipt, FaHistory } from 'react-icons/fa';
 
 // Use bg="dark" and variant="dark" for a cleaner, modern look, or keep primary.
 const MainLayout = ({ children, activeKey, setActiveKey }) => {
@@ -64,6 +64,14 @@ const MainLayout = ({ children, activeKey, setActiveKey }) => {
                                 className="d-flex align-items-center"
                             >
                                 <FaChartBar className="me-2" /> Reports
+                            </Nav.Link>
+
+                            <Nav.Link
+                                onClick={() => setActiveKey('history')}
+                                active={activeKey === 'history'}
+                                className="d-flex align-items-center"
+                            >
+                                <FaHistory className="me-2" /> History
                             </Nav.Link>
                         </Nav>
 
