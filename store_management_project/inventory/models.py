@@ -84,7 +84,6 @@ class Supplier(models.Model):
 
 # 5. Purchase Model (Updated with save method)
 class Purchase(models.Model):
-    """Record of stock purchased from a supplier."""
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='purchases')
     
     supplier = models.ForeignKey(
@@ -106,29 +105,41 @@ class Purchase(models.Model):
     def __str__(self):
         return f"Purchase: {self.product.name} - {self.purchase_quantity} units on {self.purchase_date}"
     
-    # Custom save method to update stock when a purchase is recorded
     def save(self, *args, **kwargs):
         is_new = self._state.adding
-        super().save(*args, **kwargs) # Save the Purchase first
+        super().save(*args, **kwargs) 
 
-        # Only update stock on new purchases
         if is_new:
             try:
-                # Retrieve the Stock record associated with the product
                 stock_record = self.product.stock 
 
-                # Crucial Stock Addition Logic
-                # Renamed 'purchased_quantity' to 'purchase_quantity' to match the model field
                 stock_record.quantity += self.purchase_quantity 
 
-                # Save the updated quantity
                 stock_record.save(update_fields=['quantity']) 
 
             except Stock.DoesNotExist:
-                # In a real system, you'd create the stock record if missing, 
-                # but for now, we'll assume it exists or pass.
                 print(f"CRITICAL ERROR: Stock record missing for product ID {self.product.id}. Purchase stock not updated.")
                 pass
+            
+            
+    def delete(self, *args, **kwargs):
+        quantity_to_revert = self.purchase_quantity
+        product = self.product
+
+        try:
+            stock_record = product.stock
+            stock_record.quantity -= quantity_to_revert
+
+            if stock_record.quantity < 0:
+                stock_record.quantity = 0 
+
+            stock_record.save(update_fields=['quantity'])
+        except Stock.DoesNotExist:
+            pass 
+
+        super().delete(*args, **kwargs)
+            
+            
 
 # 6. SaleInvoice Model
 class SaleInvoice(models.Model):
@@ -157,27 +168,21 @@ class SaleItem(models.Model):
     def __str__(self):
         return f"Sale: {self.product.name} x {self.sold_quantity}"
 
-    # Custom save method to deduct stock when a sale item is created
     def save(self, *args, **kwargs):
         is_new = self._state.adding
-        super().save(*args, **kwargs) # Save the SaleItem first
+        super().save(*args, **kwargs) 
 
-        # Only update stock on new sale items
         if is_new:
             try:
-                # IMPORTANT: Use .select_for_update() in a transaction for real-world safety
-                # But for this structure, ensure the relationship is correct:
                 stock_record = self.product.stock 
 
-                # Crucial Stock Deduction Logic
                 stock_record.quantity -= self.sold_quantity 
 
                 if stock_record.quantity < 0:
                     stock_record.quantity = 0 
 
-                stock_record.save(update_fields=['quantity']) # <-- Use update_fields for efficiency
+                stock_record.save(update_fields=['quantity']) 
 
             except Stock.DoesNotExist:
-                # Log an error here in a real app
                 print(f"CRITICAL ERROR: Stock record missing for product ID {self.product.id}")
                 pass

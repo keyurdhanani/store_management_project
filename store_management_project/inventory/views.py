@@ -9,6 +9,12 @@ from django.utils import timezone
 from django.http import HttpResponse
 import csv
 from datetime import timedelta
+from rest_framework import generics
+from rest_framework.permissions import AllowAny 
+from django.contrib.auth.models import User
+from .serializers import UserSerializer 
+from rest_framework.permissions import IsAuthenticated
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('name')
@@ -119,3 +125,13 @@ class SalesExportView(views.APIView):
             ])
 
         return response
+    
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = UserSerializer
+    
+class PurchaseViewSet(viewsets.ModelViewSet):
+    queryset = Purchase.objects.all().select_related('product', 'supplier').order_by('-purchase_date')
+    serializer_class = PurchaseSerializer
+    permission_classes = [IsAuthenticated]

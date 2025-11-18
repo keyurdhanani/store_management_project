@@ -3,18 +3,24 @@ import MainLayout from './components/MainLayout';
 import ProductList from './components/ProductList';
 import AddProductForm from './components/AddProductForm';
 import SupplierManagement from './components/SupplierManagement';
-import { Button, Container } from 'react-bootstrap';
 import PurchaseEntryPage from './components/PurchaseEntryPage';
 import BillingPOS from './components/BillingPOS';
-import './App.css'; 
 import HistoryPage from './components/HistoryPage';
 import Dashboard from './components/Dashboard';
 
+import { Button, Container, Spinner } from 'react-bootstrap';
+import { useAuth } from './context/AuthContext'; 
+import Login from './components/auth/Login'; 
+import './App.css'; 
+
+
 function App() {
-  const [currentPage, setCurrentPage] = useState('products'); 
+  const { user, logout, loading: authLoading } = useAuth();
+  
+  const [currentPage, setCurrentPage] = useState('dashboard'); 
   const [showAddForm, setShowAddForm] = useState(false);
   const [refreshProducts, setRefreshProducts] = useState(0);
-
+  const [isRegisterMode, setIsRegisterMode] = useState(false); 
   const handleProductAdded = () => {
     setShowAddForm(false); 
     setRefreshProducts(prev => prev + 1); 
@@ -22,17 +28,16 @@ function App() {
   };
 
   const handleSetPage = (pageKey) => {
-      setCurrentPage(pageKey);
-      setShowAddForm(false);
+    setCurrentPage(pageKey);
+    setShowAddForm(false); 
   }
 
   const renderPage = () => {
-    if (currentPage === 'history') { 
-        return <HistoryPage />;
+    if (currentPage === 'dashboard') {
+        return <Dashboard />;
     }
-    // --- 1. Inventory Management (Products/AddProduct) ---
+    
     if (currentPage === 'products' || showAddForm) {
-      
       return (
         <Container className="my-4">
           <div className="d-flex justify-content-between align-items-center mb-4">
@@ -51,19 +56,12 @@ function App() {
               onCancel={() => setShowAddForm(false)} 
             />
           ) : (
-            // Pass the refresh key to force re-render when a new product is added
             <ProductList key={refreshProducts} onAddProductClick={() => setShowAddForm(true)} />
           )}
         </Container>
       );
     }
-    if (currentPage === 'dashboard') {
-        return <Dashboard />;
-    }
     
-    if (currentPage === 'products' || showAddForm) {
-        // ... existing Inventory Management code
-    }
     // --- 2. Purchases/Stock Management Router Container ---
     if (currentPage === 'purchases' || currentPage === 'supplier-management') {
       
@@ -102,23 +100,57 @@ function App() {
         return <BillingPOS />;
     }
 
-    // --- 4. Placeholder for other pages ---
+    // --- 4. History ---
+    if (currentPage === 'history') { 
+        return <HistoryPage />;
+    }
+
+    // --- 5. Placeholder for other pages ---
     return (
       <Container className="mt-5 text-center">
-        {/* Format the current page name for display */}
         <h1 className="text-muted">{currentPage.charAt(0).toUpperCase() + currentPage.slice(1)} Page</h1>
         <p className="lead">This feature is coming soon!</p>
       </Container>
     );
-
-    
-    
-
   };
+
+  // ==========================================================
+  // --- TOP-LEVEL AUTHENTICATION CHECK ---
+  // ==========================================================
+  
+  if (authLoading) {
+    return (
+      <div className="text-center mt-5">
+        <Spinner animation="border" variant="secondary" /> 
+        <p className="mt-2">Loading User...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    // Show Register component if in register mode
+    if (isRegisterMode) {
+      return <Register switchToLogin={() => setIsRegisterMode(false)} />;
+    }
+    // Default to Login component
+    return <Login switchToRegister={() => setIsRegisterMode(true)} />;
+  }
+
+  // ==========================================================
+  // --- AUTHENTICATED USER RENDERING ---
+  // ==========================================================
 
   return (
     <div className="App">
-      <MainLayout activeKey={currentPage} setActiveKey={handleSetPage}>
+      {/* MainLayout includes the navigation (like NavbarComponent)
+        It receives the active page key and the navigation handler.
+        It must also be updated to receive and display the user info and handle logout.
+      */}
+      <MainLayout 
+        activeKey={currentPage} 
+        setActiveKey={handleSetPage}
+        onLogout={logout} // Pass logout function down
+      >
         {renderPage()}
       </MainLayout>
     </div>

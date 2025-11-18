@@ -156,3 +156,27 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+    
+def update(self, instance, validated_data):
+    old_quantity = instance.purchase_quantity
+    product = instance.product
+
+    try:
+        stock_record = product.stock
+        stock_record.quantity -= old_quantity 
+        stock_record.save(update_fields=['quantity'])
+    except Stock.DoesNotExist:
+        pass
+
+    instance = super().update(instance, validated_data)
+
+    new_quantity = instance.purchase_quantity
+
+    try:
+        stock_record = product.stock
+        stock_record.quantity += new_quantity 
+        stock_record.save(update_fields=['quantity'])
+    except Stock.DoesNotExist:
+        pass
+
+    return instance

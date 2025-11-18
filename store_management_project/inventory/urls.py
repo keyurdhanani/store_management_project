@@ -6,7 +6,6 @@ from .views import (CategoryViewSet, ProductViewSet, SupplierViewSet,
                     PurchaseViewSet, SaleInvoiceViewSet,
                     DashboardStatsView, LowStockListView,
                     PurchaseHistoryListView, SaleHistoryListView, SalesExportView,
-                    # Import the new view
                     RegisterView) 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
