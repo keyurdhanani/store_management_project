@@ -1,98 +1,108 @@
-// store-management-frontend/src/components/MainLayout.jsx
-
 import React from 'react';
 import { Navbar, Container, Nav, Button, Image } from 'react-bootstrap';
-import logo from '../assets/logo.png'; // <-- adjust path if needed
-// Import icons
-import { FaTachometerAlt, FaBoxes, FaShoppingCart, FaChartBar, FaSignOutAlt, FaReceipt, FaHistory } from 'react-icons/fa';
+import logo from '../assets/logo.png'; 
+import { useAuth } from '../context/AuthContext';
 
-// Use bg="dark" and variant="dark" for a cleaner, modern look, or keep primary.
+// Icons
+import { 
+    FaTachometerAlt, FaBoxes, FaShoppingCart, FaChartBar, 
+    FaSignOutAlt, FaReceipt, FaHistory, FaStore 
+} from 'react-icons/fa';
+
 const MainLayout = ({ children, activeKey, setActiveKey }) => {
+    const { user, logout } = useAuth();
+
+    // Helper component for consistent navigation links
+    // eslint-disable-next-line no-unused-vars
+    const NavLinkItem = ({ eventKey, icon: Icon, text }) => (
+        <Nav.Link 
+            onClick={() => setActiveKey(eventKey)}
+            active={activeKey === eventKey}
+            className="d-flex align-items-center me-3"
+        >
+            <Icon className="me-2" /> {text}
+        </Nav.Link>
+    );
+
     return (
         <>
-            {/* Top Navigation Bar: Changed bg="primary" to bg="dark" for contrast */}
+            {/* TOP NAVBAR */}
             <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className="shadow-lg">
-                <Container fluid>
-                    {/* Logo + Brand Name */}
-                    <Navbar.Brand href="#" className="fw-bold d-flex align-items-center">
+                <Container fluid className="px-md-5">
+                    <Navbar.Brand 
+                        onClick={() => setActiveKey('dashboard')} 
+                        className="fw-bold d-flex align-items-center cursor-pointer"
+                    >
                         <Image
                             src={logo}
                             alt="Pharma & Glow Logo"
                             width="45"
                             height="45"
                             roundedCircle
-                            className="me-2 border border-2 border-white" // Added border
+                            className="me-2 border border-2 border-white"
                         />
+                        <FaStore className="me-2" />
                         Pharma & Glow
                     </Navbar.Brand>
 
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        {/* Main Navigation Links */}
-                        <Nav className="me-auto">
-                            <Nav.Link
-                                onClick={() => setActiveKey('dashboard')}
-                                active={activeKey === 'dashboard'}
-                                className="d-flex align-items-center"
-                            >
-                                <FaTachometerAlt className="me-2" /> Dashboard
-                            </Nav.Link>
-                            <Nav.Link
-                                onClick={() => setActiveKey('products')}
-                                active={activeKey === 'products'}
-                                className="d-flex align-items-center"
-                            >
-                                <FaBoxes className="me-2" /> Inventory
-                            </Nav.Link>
-                            <Nav.Link
-                                onClick={() => setActiveKey('purchases')}
-                                active={activeKey === 'purchases'}
-                                className="d-flex align-items-center"
-                            >
-                                <FaShoppingCart className="me-2" /> Purchases
-                            </Nav.Link>
-                            <Nav.Link
-                                onClick={() => setActiveKey('sales')}
-                                active={activeKey === 'sales'}
-                                className="d-flex align-items-center"
-                            >
-                                <FaReceipt className="me-2" /> Sales & Billing
-                            </Nav.Link>
-                            <Nav.Link
-                                onClick={() => setActiveKey('reports')}
-                                active={activeKey === 'reports'}
-                                className="d-flex align-items-center"
-                            >
-                                <FaChartBar className="me-2" /> Reports
-                            </Nav.Link>
-
-                            <Nav.Link
-                                onClick={() => setActiveKey('history')}
-                                active={activeKey === 'history'}
-                                className="d-flex align-items-center"
-                            >
-                                <FaHistory className="me-2" /> History
-                            </Nav.Link>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        
+                        {/* LEFT NAVIGATION */}
+                        <Nav className="mx-auto"> 
+                            <NavLinkItem 
+                                eventKey="dashboard" 
+                                icon={FaTachometerAlt} 
+                                text="Dashboard" 
+                            />
+                            <NavLinkItem 
+                                eventKey="products" 
+                                icon={FaBoxes} 
+                                text="Inventory" 
+                            />
+                            <NavLinkItem 
+                                eventKey="purchases" 
+                                icon={FaShoppingCart} 
+                                text="Purchases" 
+                            />
+                            <NavLinkItem 
+                                eventKey="sales" 
+                                icon={FaReceipt} 
+                                text="Sales & Billing" 
+                            />
+                            <NavLinkItem 
+                                eventKey="reports" 
+                                icon={FaChartBar} 
+                                text="Reports" 
+                            />
+                            <NavLinkItem 
+                                eventKey="history" 
+                                icon={FaHistory} 
+                                text="History" 
+                            />
                         </Nav>
 
-                        {/* User/Logout Section */}
-                        <Nav>
-                            <Nav.Link href="#" disabled className="text-light me-3">
-                                Welcome, **Admin**!
+                        {/* RIGHT SIDE: USER + LOGOUT */}
+                        <Nav className="ms-auto">
+                            <Nav.Link disabled className="text-light me-3 d-none d-lg-block">
+                                Welcome, <strong>{user?.username || "Admin"}</strong>!
                             </Nav.Link>
+
                             <Button
-                                variant="outline-danger" // Used 'danger' to signify logout action
+                                variant="outline-danger"
                                 size="sm"
-                                onClick={() => setActiveKey('login')}
+                                onClick={logout}
+                                className="d-flex align-items-center fw-bold px-3"
                             >
                                 <FaSignOutAlt className="me-2" /> Logout
                             </Button>
                         </Nav>
+
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
 
-            {/* Main Content Area */}
+            {/* MAIN CONTENT */}
             <Container fluid className="p-0">
                 {children}
             </Container>

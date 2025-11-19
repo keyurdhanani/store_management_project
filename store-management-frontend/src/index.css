@@ -1,0 +1,88 @@
+/* store-management-frontend/src/index.css */
+
+/* Import Google Fonts (example) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f2f5; /* Light grey background */
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: #3f2b96; /* Dark purple for headings */
+}
+
+/* Customizing Bootstrap variables (example) */
+:root {
+    --bs-primary: #3f2b96; /* Dark purple */
+    --bs-secondary: #a8c0ff; /* Light purple */
+    --bs-success: #28a745;
+    --bs-info: #17a2b8;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #343a40;
+}
+
+/* Apply custom primary to buttons */
+.btn-primary {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #5a40b3 !important; /* Slightly darker on hover */
+    border-color: #5a40b3 !important;
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.modal-content {
+    border-radius: 12px;
+}
+
+/* Input focus style */
+.form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(63, 43, 150, 0.25);
+}
+
+/* Navbar styling */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-weight: 400;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--bs-secondary) !important;
+}
+
+/* Background for auth pages */
+.auth-background {
+    background: linear-gradient(135deg, var(--bs-secondary) 0%, var(--bs-primary) 100%);
+}
+
+/* Subtle table hover effect */
+.table-hover tbody tr:hover {
+    background-color: rgba(63, 43, 150, 0.05); /* Light primary tint */
+}
+
+/* Icon styling */
+.icon-large {
+    font-size: 2.5rem;
+    color: var(--bs-primary);
+}

@@ -2,7 +2,7 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (CategoryViewSet, ProductViewSet, SupplierViewSet, 
+from .views import (CategoryViewSet, ProductViewSet, ProfitMarginView, SupplierViewSet, 
                     PurchaseViewSet, SaleInvoiceViewSet,
                     DashboardStatsView, LowStockListView,
                     PurchaseHistoryListView, SaleHistoryListView, SalesExportView,
@@ -34,4 +34,5 @@ urlpatterns = [
     path('history/sales/', SaleHistoryListView.as_view({'get': 'list'}), name='sales-history'),
     path('history/purchases/', PurchaseHistoryListView.as_view({'get': 'list'}), name='purchase-history'),
     path('export/sales/', SalesExportView.as_view(), name='sales-export'),
+    path('dashboard/margins/', ProfitMarginView.as_view(), name='profit-margins'),
 ]

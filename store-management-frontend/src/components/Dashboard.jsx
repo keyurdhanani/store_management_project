@@ -2,32 +2,56 @@
 
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Alert, Table, Badge, Spinner } from 'react-bootstrap';
-import { fetchDashboardStats, fetchLowStockList } from '../services/api';
-import { FaBoxOpen, FaChartLine, FaDollarSign, FaExclamationTriangle } from 'react-icons/fa';
-import { IoMdTime } from 'react-icons/io'; // Example icon for time/expiry
+
+import { 
+    fetchDashboardStats, 
+    fetchLowStockList, 
+    fetchProfitMargins 
+} from '../services/api';
+
+// Icons
+import { 
+    FaBoxOpen, 
+    FaChartLine, 
+    FaDollarSign, 
+    FaExclamationTriangle, 
+    FaShoppingBag 
+} from 'react-icons/fa';
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
-  const [lowStock, setLowStock] = useState([]);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [margins, setMargins] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [marginLoading, setMarginLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch Dashboard + Low Stock + Profit
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
-        const [statsRes, lowStockRes] = await Promise.all([
+        const [statsRes, lowStockRes, marginRes] = await Promise.all([
           fetchDashboardStats(),
           fetchLowStockList(),
+          fetchProfitMargins(),
         ]);
+
         setStats(statsRes.data);
-        setLowStock(lowStockRes.data);
+        setLowStockProducts(lowStockRes.data);
+        setMargins(marginRes.data);
+
         setLoading(false);
+        setMarginLoading(false);
+
       } catch (err) {
         console.error("Dashboard loading failed:", err);
-        setError("Failed to fetch dashboard data. Check API status.");
+        setError("Failed to fetch dashboard data. Check API.");
         setLoading(false);
+        setMarginLoading(false);
       }
     };
+
     loadDashboardData();
   }, []);
 
@@ -49,107 +73,173 @@ const Dashboard = () => {
   }
 
   return (
-    <Container fluid className="my-4">
-      <h2 className="mb-4 text-primary"><FaChartLine className="me-2" />Dashboard Overview</h2>
+    <Container className="my-4">
 
-      {/* --- 1. STATS CARDS --- */}
-      <Row className="g-4 mb-5">
-        {/* Card 1: Total Products */}
-        <Col md={3}>
-          <DashboardCard 
-            title="Total Products" 
-            value={stats.total_products} 
-            icon={FaBoxOpen} 
-            bg="info" 
-          />
-        </Col>
+      {/* ========================= */}
+      {/* 📊 DASHBOARD OVERVIEW     */}
+      {/* ========================= */}
+      <h2 className="mb-4 text-primary">📊 Dashboard Overview</h2>
 
-        {/* Card 2: Total Inventory Value */}
-        <Col md={3}>
-          <DashboardCard 
-            title="Total Stock Value (INR)" 
-            value={`₹ ${stats.total_stock_value.toLocaleString()}`} 
-            icon={FaDollarSign} 
-            bg="primary" 
-          />
-        </Col>
 
-        {/* Card 3: Recent Revenue */}
-        <Col md={3}>
-          <DashboardCard 
-            title="Revenue (Last 7 Days)" 
-            value={`₹ ${stats.recent_revenue.toLocaleString()}`} 
-            icon={FaChartLine} 
-            bg="success" 
-          />
-        </Col>
+      {/* ========================= */}
+      {/* ⚠️ LOW STOCK WARNING BAR  */}
+      {/* ========================= */}
+      {lowStockProducts.length > 0 && (
+        <Alert variant="warning" className="d-flex align-items-center">
+          <FaExclamationTriangle className="me-3 fs-4" />
+          <div>
+            <strong>Low Stock Alert!</strong> The following items are running low:
+            <div className="mt-2">
+              {lowStockProducts.map(p => (
+                <span 
+                  key={p.id} 
+                  className="badge bg-warning text-dark me-2"
+                >
+                  {p.name} ({p.stock_details.quantity})
+                </span>
+              ))}
+            </div>
+          </div>
+        </Alert>
+      )}
 
-        {/* Card 4: Low Stock Alert */}
-        <Col md={3}>
-          <DashboardCard 
-            title="Low Stock Items" 
-            value={stats.low_stock_count} 
-            icon={FaExclamationTriangle} 
-            bg={stats.low_stock_count > 0 ? "danger" : "secondary"} 
-          />
-        </Col>
-      </Row>
 
-      {/* --- 2. LOW STOCK REPORT TABLE --- */}
-      <Row>
-        <Col>
-          <Card className="shadow">
-            <Card.Header className="bg-warning text-white fw-bold">
-              <FaExclamationTriangle className="me-2" /> Low Stock Alert List
-            </Card.Header>
+      {/* ========================= */}
+      {/* 🔢 METRIC CARDS           */}
+      {/* ========================= */}
+      <Row className="g-4 mb-4">
+
+        {/* Total Products */}
+        <Col md={4}>
+          <Card className="text-center bg-white h-100 shadow">
             <Card.Body>
-              <Table striped bordered hover size="sm">
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Category</th>
-                    <th>Current Stock</th>
-                    <th>Threshold</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lowStock.length === 0 ? (
-                    <tr><td colSpan="4" className="text-center text-muted">No items currently low on stock.</td></tr>
-                  ) : (
-                    lowStock.map(product => (
-                      <tr key={product.id}>
-                        <td>**{product.name}**</td>
-                        <td>{product.category_name}</td>
-                        <td><Badge bg="danger">{product.stock_details.quantity}</Badge></td>
-                        <td>{product.stock_details.low_stock_threshold}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </Table>
+              <FaShoppingBag className="icon-large text-primary mb-3" size={45} />
+              <Card.Title className="text-muted">Total Products</Card.Title>
+              <Card.Text className="fs-2 fw-bold text-dark">{stats.total_products}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
+
+        {/* Total Inventory Value */}
+        <Col md={4}>
+          <Card className="text-center bg-white h-100 shadow">
+            <Card.Body>
+              <FaDollarSign className="icon-large text-success mb-3" size={45} />
+              <Card.Title className="text-muted">Total Inventory Value</Card.Title>
+              <Card.Text className="fs-3 fw-bold text-dark">
+                ₹ {stats.total_stock_value.toLocaleString()}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Recent Revenue */}
+        <Col md={4}>
+          <Card className="text-center bg-white h-100 shadow">
+            <Card.Body>
+              <FaChartLine className="icon-large text-info mb-3" size={45} />
+              <Card.Title className="text-muted">Revenue (Last 7 Days)</Card.Title>
+              <Card.Text className="fs-3 fw-bold text-dark">
+                ₹ {stats.recent_revenue.toLocaleString()}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+
       </Row>
+
+
+
+      {/* ============================= */}
+      {/* 📉 LOW STOCK TABLE (DETAILED) */}
+      {/* ============================= */}
+      <h3 className="mt-4 text-danger"><FaExclamationTriangle className="me-2" /> Low Stock Items</h3>
+
+      <Card className="shadow mb-4">
+        <Card.Body>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Threshold</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lowStockProducts.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="text-center text-muted">
+                    No low stock items.
+                  </td>
+                </tr>
+              ) : (
+                lowStockProducts.map(product => (
+                  <tr key={product.id}>
+                    <td><strong>{product.name}</strong></td>
+                    <td>{product.category_name}</td>
+                    <td>
+                      <Badge bg="danger">{product.stock_details.quantity}</Badge>
+                    </td>
+                    <td>{product.stock_details.low_stock_threshold}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+
+
+
+      {/* ========================= */}
+      {/* 💰 DAILY PROFIT MARGINS   */}
+      {/* ========================= */}
+      <h3 className="mt-4 mb-3 text-secondary">💰 Daily Profit Margin</h3>
+
+      <Card className="shadow-sm mb-4">
+        <Card.Body>
+          {marginLoading ? (
+            <div className="text-center">Loading Profit Data...</div>
+          ) : (
+            <Table striped hover responsive size="sm">
+              <thead>
+                <tr className="table-success">
+                  <th>Date</th>
+                  <th>Revenue</th>
+                  <th>Cost</th>
+                  <th>Profit</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody>
+                {margins.slice(0, 7).map((margin) => {
+                  const pct = (margin.total_profit / margin.total_revenue) * 100 || 0;
+                  return (
+                    <tr key={margin.date}>
+                      <td>{new Date(margin.date).toLocaleDateString()}</td>
+                      <td>₹{parseFloat(margin.total_revenue).toFixed(2)}</td>
+                      <td>₹{parseFloat(margin.total_cost).toFixed(2)}</td>
+                      <td><strong>₹{parseFloat(margin.total_profit).toFixed(2)}</strong></td>
+                      <td>{pct.toFixed(2)}%</td>
+                    </tr>
+                  );
+                })}
+                {margins.length === 0 && (
+                  <tr>
+                    <td colSpan="5" className="text-center text-muted">
+                      No profit data available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          )}
+        </Card.Body>
+      </Card>
+
     </Container>
   );
 };
-
-// Helper Component for Dashboard Cards (for best UI with icons)
-const DashboardCard = ({ title, value, icon: Icon, bg }) => (
-    <Card bg={bg} text="white" className="shadow-sm border-0">
-        <Card.Body>
-            <Row className="align-items-center">
-                <Col xs={3} className="text-center">
-                    <Icon size={40} />
-                </Col>
-                <Col xs={9}>
-                    <div className="text-uppercase fw-bold small">{title}</div>
-                    <div className="h3 mb-0">{value}</div>
-                </Col>
-            </Row>
-        </Card.Body>
-    </Card>
-);
 
 export default Dashboard;

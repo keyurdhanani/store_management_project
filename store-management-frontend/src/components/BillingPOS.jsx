@@ -1,191 +1,242 @@
+/* eslint-disable no-unused-vars */
 // store-management-frontend/src/components/BillingPOS.jsx
 
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Table, Alert, InputGroup, Badge } from 'react-bootstrap';
-import { fetchProducts, createSaleInvoice } from '../services/api';
+import {
+  Container, Row, Col, Card, Form, Button,
+  Table, Alert, InputGroup, Badge
+} from 'react-bootstrap';
+
+import {
+  FaSearch, FaPlusCircle, FaShoppingCart,
+  FaCashRegister, FaUser, FaPercentage, FaBox
+} from 'react-icons/fa';
+
+import { fetchProducts, fetchProductDetail, createSaleInvoice } from '../services/api';
+
+const initialFormData = {
+  product: '',
+  batch: '',
+  quantity: 1,
+  unit_sale_price: 0,
+};
 
 const BillingPOS = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState([]);
+
+  const [formData, setFormData] = useState(initialFormData);
+  const { product, batch, quantity, unit_sale_price } = formData;
+
+  const [selectedProductDetails, setSelectedProductDetails] = useState(null);
+
   const [discountRate, setDiscountRate] = useState(0);
   const [taxRate] = useState(5);
   const [customerName, setCustomerName] = useState('');
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // --- Load products ---
   useEffect(() => {
     const loadProducts = async () => {
       try {
         const response = await fetchProducts();
-        setProducts(response.data);
-      // eslint-disable-next-line no-unused-vars
+        const processed = response.data.map(p => ({
+          ...p,
+          mrp: parseFloat(p.mrp) || 0
+        }));
+        setProducts(processed);
       } catch (err) {
-        setError("Failed to load product data for billing.");
+        setError("Failed to load products.");
       }
     };
     loadProducts();
   }, []);
 
-  // --- Filter products ---
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(p =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // --- Cart Management ---
-  const addToCart = (product) => {
-    setError(null);
-    const availableStock = parseInt(product.stock_details.quantity) || 0;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    if (availableStock <= 0) {
-      setError(`Product ${product.name} is Out of Stock.`);
+    const numeric = (name === 'quantity' || name === 'unit_sale_price')
+      ? parseFloat(value) || 0
+      : value;
+
+    setFormData(prev => ({ ...prev, [name]: numeric }));
+    setError(null);
+  };
+
+  const handleDiscountChange = (e) => {
+    const v = parseFloat(e.target.value) || 0;
+    setDiscountRate(v);
+  };
+
+  const handleProductSelect = async (productId) => {
+    const prod = products.find(p => p.id === parseInt(productId));
+    if (!prod) return;
+
+    if (selectedProductDetails?.id === prod.id) {
+      setFormData(prev => ({
+        ...prev,
+        product: productId,
+        unit_sale_price: selectedProductDetails.mrp
+      }));
       return;
     }
 
-    const existingItem = cart.find(item => item.product.id === product.id);
+    setSelectedProductDetails(null);
+    setFormData({ product: productId, batch: '', quantity: 1, unit_sale_price: 0 });
 
-    if (existingItem) {
-      if (existingItem.quantity + 1 > availableStock) {
-        setError(`Only ${availableStock} units of ${product.name} left in stock.`);
-        return;
+    try {
+      const res = await fetchProductDetail(productId);
+      const processed = { ...res.data, mrp: parseFloat(res.data.mrp) || 0 };
+      setSelectedProductDetails(processed);
+
+      setFormData(prev => ({
+        ...prev,
+        unit_sale_price: processed.mrp
+      }));
+    } catch (err) {
+      setError("Error loading product details.");
+    }
+  };
+
+  const handleAddItemToCart = () => {
+    const qty = parseFloat(quantity);
+    const price = parseFloat(unit_sale_price);
+
+    if (!product || !batch || qty <= 0 || price <= 0) {
+      setError("Enter valid product, batch, qty, and price.");
+      return;
+    }
+
+    const detail = selectedProductDetails;
+    const batchId = parseInt(batch);
+    const selectedBatch = detail.active_batches.find(b => b.id === batchId);
+
+    if (!selectedBatch) {
+      setError("Invalid batch.");
+      return;
+    }
+
+    if (qty > selectedBatch.quantity) {
+      setError(`Only ${selectedBatch.quantity} units left.`);
+      return;
+    }
+
+    setCart(prev => [
+      ...prev,
+      {
+        product_id: detail.id,
+        product_name: detail.name,
+        batch_id: batchId,
+        batch_number: selectedBatch.batch_number,
+        expiry_date: selectedBatch.expiry_date,
+        quantity: qty,
+        price,
+        total: qty * price
       }
-      setCart(cart.map(item =>
-        item.product.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { product, quantity: 1 }]);
-    }
-  };
+    ]);
 
-  const updateCartQuantity = (productId, newQuantity) => {
+    // Update UI stock quickly
+    setSelectedProductDetails(prev => ({
+      ...prev,
+      active_batches: prev.active_batches.map(b =>
+        b.id === batchId ? { ...b, quantity: b.quantity - qty } : b
+      )
+    }));
+
+    setFormData(initialFormData);
     setError(null);
-    const productData = products.find(p => p.id === productId);
-    const maxQty = parseInt(productData.stock_details.quantity) || 0;
-
-    if (newQuantity <= 0) {
-      setCart(cart.filter(item => item.product.id !== productId));
-    } else if (newQuantity > maxQty) {
-      setError(`Cannot exceed stock limit of ${maxQty} for ${productData.name}.`);
-    } else {
-      setCart(cart.map(item =>
-        item.product.id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
-      ));
-    }
   };
 
-  const removeFromCart = (productId) => {
-    setCart(cart.filter(item => item.product.id !== productId));
-  };
-
-  // --- Billing calculations ---
-  const calculateTotals = () => {
-    let subtotal = cart.reduce((acc, item) => {
-      const price = parseFloat(item.product.base_price) || 0;
-      return acc + price * item.quantity;
-    }, 0);
-
-    subtotal = parseFloat(subtotal.toFixed(2));
-    const discountAmount = parseFloat((subtotal * (discountRate / 100)).toFixed(2));
-    const discountedSubtotal = subtotal - discountAmount;
-    const taxAmount = parseFloat((discountedSubtotal * (taxRate / 100)).toFixed(2));
-    const finalTotal = parseFloat((discountedSubtotal + taxAmount).toFixed(2));
-
-    return { subtotal, discountAmount, taxAmount, finalTotal };
-  };
-
-  const totals = calculateTotals();
-
-  // --- Checkout ---
   const handleCheckout = async () => {
     if (cart.length === 0) {
-      setError("The cart is empty. Cannot process sale.");
+      setError("Cart empty.");
       return;
     }
 
-    setError(null);
-    setSuccess(null);
-
     const invoiceData = {
-      customer_name: customerName || 'Cash Customer',
-      discount_rate: parseFloat(discountRate) || 0,
-      tax_rate: parseFloat(taxRate) || 0,
+      customer_name: customerName || "Cash Customer",
+      discount_rate: discountRate,
+      tax_rate: taxRate,
       items: cart.map(item => ({
-        product: item.product.id,
-        sold_quantity: parseInt(item.quantity),
-        unit_sale_price: parseFloat(item.product.base_price),
-      })),
+        product: item.product_id,
+        batch: item.batch_id,
+        sold_quantity: item.quantity,
+        unit_sale_price: item.price
+      }))
     };
 
     try {
-      const response = await createSaleInvoice(invoiceData);
-      setSuccess(`✅ Sale successful! Invoice #${response.data.invoice_number}`);
+      const res = await createSaleInvoice(invoiceData);
+      setSuccess(`Sale successful. Invoice #${res.data.invoice_number}`);
 
-      // Reset cart
       setCart([]);
-      setSearchTerm('');
-      setDiscountRate(0);
       setCustomerName('');
+      setDiscountRate(0);
+      setSelectedProductDetails(null);
+
+      const updated = await fetchProducts();
+      setProducts(updated.data.map(p => ({ ...p, mrp: parseFloat(p.mrp) || 0 })));
+
     } catch (err) {
-      console.error("Checkout failed:", err.response?.data || err);
-      if (err.response && err.response.data) {
-        setError(`Sale failed: ${JSON.stringify(err.response.data)}`);
-      } else {
-        setError("Sale failed. Check API connection or server logs.");
-      }
+      setError("Sale failed. Check details.");
     }
   };
 
-  // --- Render ---
+  const subtotal = cart.reduce((s, i) => s + i.total, 0);
+  const discAmt = subtotal * (discountRate / 100);
+  const subAfterDisc = subtotal - discAmt;
+  const taxAmt = subAfterDisc * (taxRate / 100);
+  const finalTotal = subAfterDisc + taxAmt;
+
   return (
     <Container fluid className="my-4">
+
       <Row>
-        {/* Left Panel: Products */}
-        <Col md={7}>
+
+        {/* LEFT SIDE - PRODUCT SEARCH */}
+        <Col md={6}>
           <Card className="shadow-lg p-3">
-            <h3 className="text-info mb-3">🔍 Quick Search & Inventory</h3>
-            <Form.Group className="mb-3">
+            <h4 className="text-primary">
+              <FaSearch className="me-2" /> Search Products
+            </h4>
+
+            <InputGroup className="my-3">
+              <InputGroup.Text><FaSearch /></InputGroup.Text>
               <Form.Control
-                type="search"
-                placeholder="Search product by name..."
+                placeholder="Search products..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                size="lg"
+                onChange={e => setSearchTerm(e.target.value)}
               />
-            </Form.Group>
+            </InputGroup>
+
             <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
-              <Table striped hover size="sm">
-                <thead>
-                  <tr className="table-primary">
+              <Table hover bordered>
+                <thead className="table-primary">
+                  <tr>
                     <th>Name</th>
-                    <th>Price</th>
+                    <th>MRP</th>
                     <th>Stock</th>
-                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.map(product => (
-                    <tr key={product.id}>
-                      <td>{product.name}</td>
-                      <td>₹{parseFloat(product.base_price).toFixed(2)}</td>
+                  {filteredProducts.map(p => (
+                    <tr
+                      key={p.id}
+                      onClick={() => handleProductSelect(p.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <td>{p.name}</td>
+                      <td>₹{p.mrp.toFixed(2)}</td>
                       <td>
-                        <Badge bg={product.stock_details.quantity > product.stock_details.low_stock_threshold ? "success" : "warning"}>
-                          {product.stock_details.quantity}
+                        <Badge bg={p.stock_details?.quantity > 0 ? "success" : "danger"}>
+                          {p.stock_details?.quantity || 0}
                         </Badge>
-                      </td>
-                      <td>
-                        <Button
-                          variant="outline-success"
-                          size="sm"
-                          onClick={() => addToCart(product)}
-                          disabled={product.stock_details.quantity <= 0}
-                        >
-                          <i className="bi bi-cart-plus"></i> Add
-                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -195,105 +246,190 @@ const BillingPOS = () => {
           </Card>
         </Col>
 
-        {/* Right Panel: Cart & Billing */}
-        <Col md={5}>
-          <Card className="shadow-lg p-3 sticky-top" style={{ top: '15px' }}>
-            <h3 className="text-success mb-3">🛒 Sales Cart</h3>
+        {/* RIGHT SIDE - BILLING */}
+        <Col md={6}>
 
-            {error && <Alert variant="danger" dismissible onClose={() => setError(null)}>{error}</Alert>}
-            {success && <Alert variant="success" dismissible onClose={() => setSuccess(null)}>{success}</Alert>}
+          {/* Add Item Panel */}
+          <Card className="shadow-lg p-3 mb-4">
+            <h4 className="text-success">
+              <FaPlusCircle className="me-2" /> Add Item to Cart
+            </h4>
+
+            {error && <Alert variant="danger">{error}</Alert>}
+            {success && <Alert variant="success">{success}</Alert>}
+
+            <Row className="mt-3">
+
+              <Col md={5}>
+                <Form.Group>
+                  <Form.Label><FaBox className="me-2" />Product</Form.Label>
+                  <Form.Select
+                    name="product"
+                    value={product}
+                    onChange={(e) => handleProductSelect(e.target.value)}
+                  >
+                    <option value="">Select Product</option>
+                    {products.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+
+              <Col md={4}>
+                <Form.Group>
+                  <Form.Label><FaBox className="me-2" />Batch</Form.Label>
+                  <Form.Select
+                    name="batch"
+                    value={batch}
+                    onChange={handleChange}
+                    disabled={!selectedProductDetails}
+                  >
+                    <option value="">Select Batch</option>
+                    {selectedProductDetails?.active_batches?.map(b =>
+                      b.quantity > 0 && (
+                        <option key={b.id} value={b.id}>
+                          {b.batch_number} - Qty {b.quantity}
+                        </option>
+                      )
+                    )}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+
+              <Col md={3}>
+                <Form.Group>
+                  <Form.Label>Qty</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="1"
+                    value={quantity.toString()}
+                    name="quantity"
+                    onChange={handleChange}
+                    disabled={!batch}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col md={5} className="mt-3">
+                <Form.Group>
+                  <Form.Label>
+                    Price (MRP: ₹{selectedProductDetails?.mrp?.toFixed(2) || 'N/A'})
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    name="unit_sale_price"
+                    value={(parseFloat(unit_sale_price) || 0).toFixed(2)}
+                    onChange={handleChange}
+                    disabled={!product}
+                  />
+                </Form.Group>
+              </Col>
+
+            </Row>
+
+            <Button
+              className="mt-3"
+              variant="primary"
+              onClick={handleAddItemToCart}
+              disabled={!product || !batch}
+            >
+              <FaShoppingCart className="me-2" /> Add to Cart
+            </Button>
+          </Card>
+
+          {/* CART */}
+          <Card className="shadow-lg p-3 mb-4">
+            <h4><FaShoppingCart className="me-2" />Cart</h4>
 
             <Table bordered size="sm">
-              <thead>
+              <thead className="table-light">
                 <tr>
                   <th>Item</th>
-                  <th width="15%">Qty</th>
-                  <th width="20%">Price</th>
-                  <th width="10%"></th>
+                  <th>Batch</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {cart.length === 0 ? (
-                  <tr><td colSpan="4" className="text-center text-muted">Cart is empty.</td></tr>
-                ) : (
-                  cart.map(item => (
-                    <tr key={item.product.id}>
-                      <td>{item.product.name}</td>
-                      <td>
-                        <Form.Control
-                          type="number"
-                          value={item.quantity}
-                          min="1"
-                          max={item.product.stock_details.quantity}
-                          onChange={(e) => updateCartQuantity(item.product.id, parseInt(e.target.value))}
-                          size="sm"
-                        />
-                      </td>
-                      <td>₹{(parseFloat(item.product.base_price) * item.quantity).toFixed(2)}</td>
-                      <td>
-                        <Button variant="outline-danger" size="sm" onClick={() => removeFromCart(item.product.id)}>
-                          X
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                  <tr><td colSpan="5" className="text-center">Cart is empty</td></tr>
+                ) : cart.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>{item.product_name}</td>
+                    <td>{item.batch_number}</td>
+                    <td>{item.quantity}</td>
+                    <td>₹{item.price.toFixed(2)}</td>
+                    <td>₹{item.total.toFixed(2)}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
+          </Card>
 
-            <hr />
+          {/* TOTAL PANEL */}
+          <Card className="shadow-lg p-3">
+            <h4><FaCashRegister className="me-2" /> Billing Summary</h4>
 
-            {/* Customer & Discount */}
-            <Form.Group className="mb-3">
-              <Form.Label>Customer Name</Form.Label>
+            <Form.Group className="my-3">
+              <Form.Label><FaUser className="me-2" />Customer Name</Form.Label>
               <Form.Control
-                type="text"
+                placeholder="Cash Customer"
                 value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Optional"
+                onChange={e => setCustomerName(e.target.value)}
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Discount (%)</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  type="number"
-                  value={discountRate}
-                  onChange={(e) => setDiscountRate(Math.min(100, Math.max(0, parseFloat(e.target.value))))}
-                  min="0"
-                  max="100"
-                  step="1"
-                />
-                <InputGroup.Text>%</InputGroup.Text>
-              </InputGroup>
-            </Form.Group>
+            <Row>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label><FaPercentage className="me-2" />Discount (%)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={discountRate}
+                    min="0"
+                    max="100"
+                    onChange={handleDiscountChange}
+                  />
+                </Form.Group>
+              </Col>
 
-            {/* Totals */}
-            <Table className="mt-4 fw-bold">
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Tax (%)</Form.Label>
+                  <Form.Control readOnly value={taxRate} />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Table className="mt-3">
               <tbody>
-                <tr><td>Subtotal:</td><td className="text-end">₹{totals.subtotal.toFixed(2)}</td></tr>
-                <tr><td>Discount ({discountRate}%):</td><td className="text-end text-danger">- ₹{totals.discountAmount.toFixed(2)}</td></tr>
-                <tr><td>Tax ({taxRate}%):</td><td className="text-end">₹{totals.taxAmount.toFixed(2)}</td></tr>
-                <tr className="table-success fs-5">
-                  <td>FINAL TOTAL:</td>
-                  <td className="text-end">₹{totals.finalTotal.toFixed(2)}</td>
+                <tr><td>Subtotal:</td><td className="text-end">₹{subtotal.toFixed(2)}</td></tr>
+                <tr><td>Discount:</td><td className="text-end">- ₹{discAmt.toFixed(2)}</td></tr>
+                <tr><td>Tax:</td><td className="text-end">+ ₹{taxAmt.toFixed(2)}</td></tr>
+                <tr className="fw-bold fs-5 table-light">
+                  <td>Total:</td>
+                  <td className="text-end">₹{finalTotal.toFixed(2)}</td>
                 </tr>
               </tbody>
             </Table>
 
             <Button
-              variant="primary"
-              size="lg"
-              onClick={handleCheckout}
+              className="mt-3 w-100"
+              variant="success"
               disabled={cart.length === 0}
-              className="mt-3"
+              onClick={handleCheckout}
             >
-              FINALIZE SALE & PRINT BILL
+              <FaCashRegister className="me-2" /> Finalize Sale
             </Button>
           </Card>
+
         </Col>
       </Row>
+
     </Container>
   );
 };
