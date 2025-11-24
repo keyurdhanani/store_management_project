@@ -1,0 +1,827 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2025-11-10T11:00:33.132Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Me",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2025-11-10T11:00:59.910Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "Stock for Paracetamol",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2025-11-11T01:39:42.487Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "2",
+    "object_repr": "James Carter (Medicine)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2025-11-11T01:40:32.235Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "3",
+    "object_repr": "hjhgj",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2025-11-11T01:40:44.431Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "Stock for James Carter",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2025-11-11T01:44:15.509Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "2",
+    "object_repr": "James Carter (Medicine)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2025-11-11T01:44:15.510Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "1",
+    "object_repr": "Paracetamol (Medicine)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2025-11-11T01:44:32.152Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "3",
+    "object_repr": "hjhgj",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2025-11-11T01:44:32.153Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Me",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2025-11-11T01:44:32.153Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "Medicine",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2025-11-11T10:25:12.269Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "4",
+    "object_repr": "Medicine",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2025-11-12T03:01:22.180Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "Stock for Paracetamol",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Expiry date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2025-11-13T01:59:27.631Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "4",
+    "object_repr": "Viagra (Medicine)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2025-11-13T13:08:34.827Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "Stock for Paracetamol",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Quantity\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2025-11-17T13:26:55.486Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "1",
+    "object_repr": "keyur",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2025-11-19T02:21:01.837Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "5",
+    "object_repr": "Cosmetics",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2025-11-19T13:00:03.416Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "Stock for Dove 200 ML Shampoo Daily Shine (7201 units)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2025-11-19T13:00:03.416Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "Stock for Paracetamol (4000 units)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2025-11-19T13:00:14.626Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "5",
+    "object_repr": "Cosmetics",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2025-11-19T13:00:14.626Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "4",
+    "object_repr": "Medicine",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2025-11-19T13:24:53.872Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "4",
+    "object_repr": "Dove 200 ML Shampoo Daily Shine (N/A)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2025-11-19T13:24:53.872Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "3",
+    "object_repr": "Paracetamol (N/A)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2025-11-19T13:25:19.539Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "4",
+    "object_repr": "Dove 200 ML Shampoo Daily Shine (N/A)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2025-11-19T13:25:19.539Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "3",
+    "object_repr": "Paracetamol (N/A)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2025-11-19T13:27:15.293Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "4",
+    "object_repr": "Dove 200 ML Shampoo Daily Shine (N/A)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2025-11-19T13:27:15.293Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "3",
+    "object_repr": "Paracetamol (N/A)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2025-11-19T13:27:54.942Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "6",
+    "object_repr": "Medicine",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2025-11-19T13:27:59.876Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "7",
+    "object_repr": "C",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2025-11-19T13:28:08.105Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "7",
+    "object_repr": "C",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2025-11-19T13:28:17.506Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "8",
+    "object_repr": "Cosmetics",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2025-11-19T13:28:28.719Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "9",
+    "object_repr": "Health Products",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2025-11-19T13:29:15.999Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "5",
+    "object_repr": "Dove 200 ML Daily Shine Shampoo (Cosmetics)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2025-11-19T13:36:23.668Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "6",
+    "object_repr": "Stock for Paracetamol (100 units)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Quantity\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2025-11-20T02:25:15.122Z",
+    "user": 1,
+    "content_type": 4,
+    "object_id": "2",
+    "object_repr": "vishva",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$Srmo3lMxgIkSDR4RH33rDv$NW3l5M6dKYo0u10CkkBeDDuvNwml5eRlgx2JRWem7sY=",
+    "last_login": "2025-11-19T12:59:31.269Z",
+    "is_superuser": true,
+    "username": "keyur",
+    "first_name": "",
+    "last_name": "",
+    "email": "keyurdhanani34087@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-11-10T02:20:22.335Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "k39gsvetnminn4tmwz0ujljxyug9mxlx",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pAAQxhcuvcMZGAGqZqSlHZlvLs26UK3_733XyrRtra0DVnSxOqsjDr9bpnKQ-Yd8J3mW9elz-syZb0r-qBDXzvL83K4fweNRvvWkYDYSTS5uhqkWPRBvJBBj8LgmJA4OsyGPQSHKFUiejEWIIAV9f4A_8E4Jg:1vLhmV:ekvGFqPVfBsTNQV-AMVgKXGPURPGiO76vqICt5Z7BSM",
+    "expire_date": "2025-12-03T12:59:31.275Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nmtrebgynflb15stf6027nbbuueye930",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pAAQxhcuvcMZGAGqZqSlHZlvLs26UK3_733XyrRtra0DVnSxOqsjDr9bpnKQ-Yd8J3mW9elz-syZb0r-qBDXzvL83K4fweNRvvWkYDYSTS5uhqkWPRBvJBBj8LgmJA4OsyGPQSHKFUiejEWIIAV9f4A_8E4Jg:1vKzFv:SLh8B8Ynokh-ZtDUkv9ZnPWKC-3CNazPY-5WXA0RpQY",
+    "expire_date": "2025-12-01T13:26:55.511Z"
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 6,
+  "fields": {
+    "name": "Medicine",
+    "description": ""
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 8,
+  "fields": {
+    "name": "Cosmetics",
+    "description": ""
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 9,
+  "fields": {
+    "name": "Health Products",
+    "description": ""
+  }
+},
+{
+  "model": "inventory.product",
+  "pk": 6,
+  "fields": {
+    "name": "Paracetamol",
+    "description": "",
+    "base_price": "4.98",
+    "mrp": "10.00",
+    "supplier_base_price": "0.00",
+    "category": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "inventory.stock",
+  "pk": 6,
+  "fields": {
+    "product": 6,
+    "quantity": 199,
+    "low_stock_threshold": 10,
+    "expiry_date": null
+  }
+},
+{
+  "model": "inventory.supplier",
+  "pk": 4,
+  "fields": {
+    "name": "Keyur Dhanani",
+    "contact_person": "Keyur Dhanani",
+    "phone": "9313350616",
+    "email": "keyurdhanani34087@gmail.com",
+    "address": "Bandhiya"
+  }
+},
+{
+  "model": "inventory.batch",
+  "pk": 12,
+  "fields": {
+    "product": 6,
+    "batch_number": "PUR-20",
+    "cost_price": "10.00",
+    "expiry_date": null,
+    "quantity": 99,
+    "purchase_date": "2025-11-19T13:37:28.138Z"
+  }
+},
+{
+  "model": "inventory.purchase",
+  "pk": 20,
+  "fields": {
+    "product": 6,
+    "supplier": 4,
+    "purchase_quantity": 100,
+    "unit_purchase_price": "10.00",
+    "purchase_date": "2025-11-19",
+    "invoice_number": null,
+    "batch_number_input": null,
+    "expiry_date_input": null,
+    "batch_created": 12
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 1,
+  "fields": {
+    "invoice_number": "INV-00001",
+    "sale_date": "2025-11-13T14:53:04.997Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "300.00",
+    "tax_amount": "15.00",
+    "final_total": "315.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 2,
+  "fields": {
+    "invoice_number": "INV-00002",
+    "sale_date": "2025-11-14T02:15:47.146Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "1050.00",
+    "tax_amount": "52.50",
+    "final_total": "1102.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 3,
+  "fields": {
+    "invoice_number": "INV-00003",
+    "sale_date": "2025-11-14T10:32:00.431Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "12000.00",
+    "tax_amount": "600.00",
+    "final_total": "12600.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 4,
+  "fields": {
+    "invoice_number": "INV-00004",
+    "sale_date": "2025-11-14T12:51:12.891Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "138000.00",
+    "tax_amount": "6900.00",
+    "final_total": "144900.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 5,
+  "fields": {
+    "invoice_number": "INV-00005",
+    "sale_date": "2025-11-14T12:52:26.636Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "12000.00",
+    "tax_amount": "600.00",
+    "final_total": "12600.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 6,
+  "fields": {
+    "invoice_number": "INV-00006",
+    "sale_date": "2025-11-14T12:55:08.926Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "75000.00",
+    "tax_amount": "3750.00",
+    "final_total": "78750.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 7,
+  "fields": {
+    "invoice_number": "INV-00007",
+    "sale_date": "2025-11-14T12:57:04.360Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "150.00",
+    "tax_amount": "7.50",
+    "final_total": "157.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 8,
+  "fields": {
+    "invoice_number": "INV-00008",
+    "sale_date": "2025-11-14T12:58:04.175Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "150.00",
+    "tax_amount": "7.50",
+    "final_total": "157.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 9,
+  "fields": {
+    "invoice_number": "INV-00009",
+    "sale_date": "2025-11-14T13:00:12.431Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "450.00",
+    "tax_amount": "22.50",
+    "final_total": "472.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 10,
+  "fields": {
+    "invoice_number": "INV-00010",
+    "sale_date": "2025-11-14T13:05:22.539Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "150.00",
+    "tax_amount": "7.50",
+    "final_total": "157.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 11,
+  "fields": {
+    "invoice_number": "INV-00011",
+    "sale_date": "2025-11-14T13:07:53.313Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "150.00",
+    "tax_amount": "7.50",
+    "final_total": "157.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 12,
+  "fields": {
+    "invoice_number": "INV-00012",
+    "sale_date": "2025-11-15T11:28:29.132Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "15000.00",
+    "tax_amount": "750.00",
+    "final_total": "15750.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 13,
+  "fields": {
+    "invoice_number": "INV-00013",
+    "sale_date": "2025-11-15T11:28:48.579Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "2.00",
+    "tax_rate": "5.00",
+    "subtotal": "15000.00",
+    "tax_amount": "735.00",
+    "final_total": "15435.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 14,
+  "fields": {
+    "invoice_number": "INV-00014",
+    "sale_date": "2025-11-15T11:29:04.299Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "2550.00",
+    "tax_amount": "127.50",
+    "final_total": "2677.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 15,
+  "fields": {
+    "invoice_number": "INV-00015",
+    "sale_date": "2025-11-15T11:34:18.720Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "15000.00",
+    "tax_amount": "750.00",
+    "final_total": "15750.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 16,
+  "fields": {
+    "invoice_number": "INV-00016",
+    "sale_date": "2025-11-15T13:00:25.396Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "450.00",
+    "tax_amount": "22.50",
+    "final_total": "472.50"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 17,
+  "fields": {
+    "invoice_number": "INV-00017",
+    "sale_date": "2025-11-15T13:26:42.362Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "300.00",
+    "tax_amount": "15.00",
+    "final_total": "315.00"
+  }
+},
+{
+  "model": "inventory.saleinvoice",
+  "pk": 18,
+  "fields": {
+    "invoice_number": "INV-00018",
+    "sale_date": "2025-11-19T13:43:50.615Z",
+    "customer_name": "Cash Customer",
+    "discount_rate": "0.00",
+    "tax_rate": "5.00",
+    "subtotal": "10.00",
+    "tax_amount": "0.50",
+    "final_total": "10.50"
+  }
+},
+{
+  "model": "inventory.saleitem",
+  "pk": 18,
+  "fields": {
+    "invoice": 18,
+    "product": 6,
+    "sold_quantity": 1,
+    "unit_sale_price": "10.00",
+    "unit_cost_price": "10.00",
+    "batch": 12
+  }
+}
+]
